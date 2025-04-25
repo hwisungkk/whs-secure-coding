@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}상품 검색{% endblock %}
+{% block content %}
+<h2>상품 검색</h2>
+
+<!-- 검색 폼 -->
+<form method="get" action="{{ url_for('search') }}">
+  <input type="text" name="q" value="{{ keyword }}" placeholder="상품명을 입력하세요" required>
+  <button type="submit">검색</button>
+</form>
+
+<!-- 검색 결과 출력 -->
+{% if results %}
+  <h3>"{{ keyword }}"에 대한 검색 결과 ({{ results|length }}개)</h3>
+  <ul>
+    {% for item in results %}
+      <li>
+        <strong>{{ item.title }}</strong> - {{ item.price }}원<br>
+        <small>{{ item.description[:50] }}{% if item.description|length > 50 %}...{% endif %}</small><br>
+        <a href="{{ url_for('view_product', product_id=item.id) }}">자세히 보기</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% elif keyword %}
+  <p>검색 결과가 없습니다.</p>
+{% endif %}
+{% endblock %}

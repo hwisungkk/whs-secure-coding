@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}잔액 충전{% endblock %}
+{% block content %}
+<h2>잔액 충전</h2>
+
+<form method="post">
+  {{ form.hidden_tag() }}
+
+  <p>
+    계좌번호 (형식: 000-00-00000):<br>
+    {{ form.account(size=20) }}
+    {% if form.account.errors %}
+      <span style="color:red;">{{ form.account.errors[0] }}</span>
+    {% endif %}
+  </p>
+
+  <p>
+    충전할 금액:<br>
+    {{ form.amount(min=1) }}
+    {% if form.amount.errors %}
+      <span style="color:red;">{{ form.amount.errors[0] }}</span>
+    {% endif %}
+  </p>
+
+  <button type="submit">충전하기</button>
+</form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}관리자 - 상품 목록{% endblock %}
+{% block content %}
+<h2>📦 상품 목록</h2>
+<table border="1">
+  <tr>
+    <th>ID</th><th>제목</th><th>가격</th><th>판매자</th><th>삭제</th>
+  </tr>
+  {% for product in products %}
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.title }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.seller_id }}</td>
+      <td>
+        <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}">
+          <button type="submit" onclick="return confirm('정말 삭제할까요?')">삭제</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

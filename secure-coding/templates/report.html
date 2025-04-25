@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}신고하기{% endblock %}
+{% block content %}
+<h2>신고하기</h2>
+
+<form method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    신고 대상 (사용자 ID 또는 상품 ID):<br>
+    {{ form.target_id(size=40) }}
+    {% if form.target_id.errors %}
+      <span style="color: red;">{{ form.target_id.errors[0] }}</span>
+    {% endif %}
+  </p>
+  <p>
+    신고 사유:<br>
+    {{ form.reason(rows=4, cols=50) }}
+    {% if form.reason.errors %}
+      <span style="color: red;">{{ form.reason.errors[0] }}</span>
+    {% endif %}
+  </p>
+  <button type="submit">신고 접수</button>
+</form>
+
+{% endblock %}

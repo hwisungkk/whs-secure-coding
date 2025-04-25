@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}관리자 - 사용자 목록{% endblock %}
+{% block content %}
+<h2>👥 사용자 목록</h2>
+<table border="1">
+  <tr>
+    <th>ID</th><th>사용자명</th><th>잔액</th><th>관리자 여부</th><th>삭제</th>
+  </tr>
+  {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.balance }}</td>
+      <td>{{ '✅' if user.is_admin else '❌' }}</td>
+      <td>
+        <form method="post" action="{{ url_for('delete_user', user_id=user.id) }}">
+          <button type="submit" onclick="return confirm('정말 삭제할까요?')">삭제</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}1:1 채팅 - {{ receiver_name }}{% endblock %}
+{% block content %}
+<h2>{{ receiver_name }}님과의 채팅</h2>
+
+<!-- 채팅 출력 영역 -->
+<div id="chat-box" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+  {% for m in messages %}
+    <p><strong>{{ "나" if m.from == my_id else receiver_name }}:</strong> {{ m.message|e }}</p>
+  {% endfor %}
+</div>
+
+<!-- 입력 폼 -->
+<form id="chat-form">
+  <input type="text" id="message-input" placeholder="메시지를 입력하세요" style="width: 80%;" autocomplete="off" required>
+  <button type="submit">전송</button>
+</form>
+
+<!-- 소켓 연결 -->
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  const socket = io();
+  const messageInput = document.getElementById('message-input');
+  const chatBox = document.getElementById('chat-box');
+  const receiverId = "{{ receiver_id }}";
+  const myId = "{{ my_id }}";
+
+  // 1️⃣ WebSocket 연결 후 방 입장
+  socket.emit('join_private');
+
+  // 2️⃣ 실시간 메시지 수신 처리
+  socket.on('private_message', function(data) {
+    const isMine = data.from === myId;
+    const isRelevant = data.from === receiverId || data.to === receiverId;
+  
+    if (isRelevant) {
+      const p = document.createElement('p');
+      p.innerHTML = "<strong>" + (isMine ? "나" : "{{ receiver_name }}") + ":</strong> " + escapeHtml(data.message);
+      chatBox.appendChild(p);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  });
+
+  // 3️⃣ 메시지 전송
+  document.getElementById('chat-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const msg = messageInput.value.trim();
+    if (msg) {
+      socket.emit('private_message', {
+        to: receiverId,
+        message: msg
+      });
+      messageInput.value = '';
+    }
+  });
+
+  // XSS 방지용 escape 함수
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (match) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[match];
+    });
+  }
+</script>
+{% endblock %}

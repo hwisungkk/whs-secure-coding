@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}채팅 목록{% endblock %}
+{% block content %}
+<h2>나에게 온 메시지</h2>
+
+{% if senders %}
+  <ul>
+    {% for user in senders %}
+      <li>
+        <a href="{{ url_for('private_chat', receiver_id=user.id) }}">
+          {{ user.username }}님과의 대화 보기
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>아직 도착한 메시지가 없습니다.</p>
+{% endif %}
+{% endblock %}

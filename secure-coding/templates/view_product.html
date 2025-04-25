@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}상품 상세보기{% endblock %}
+{% block content %}
+
+<h2>{{ product.title|e }}</h2>
+<p>{{ product.description|e }}</p>
+<p>가격: {{ product.price }}</p>
+
+{% if seller %}
+  <h4>판매자 정보</h4>
+  <p><strong>{{ seller.username|e }}</strong></p>
+  <p>{{ seller.bio|e }}</p>
+{% else %}
+  <p>판매자 정보를 찾을 수 없습니다.</p>
+{% endif %}
+{% if session['user_id'] == product.seller_id %}
+  <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}">
+    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">상품 삭제</button>
+  </form>
+{% endif %}
+
+{% if session['user_id'] != seller.id %}
+  <a href="{{ url_for('private_chat', receiver_id=seller.id) }}">판매자에게 메시지 보내기</a>
+{% endif %}
+
+
+{% endblock %}

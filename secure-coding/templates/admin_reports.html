@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}관리자 - 신고 내역{% endblock %}
+{% block content %}
+<h2>🚨 신고 내역</h2>
+<table border="1">
+  <tr>
+    <th>ID</th><th>신고자</th><th>대상</th><th>사유</th><th>삭제</th>
+  </tr>
+  {% for report in reports %}
+    <tr>
+      <td>{{ report.id }}</td>
+      <td>{{ report.reporter_id }}</td>
+      <td>{{ report.target_id }}</td>
+      <td>{{ report.reason }}</td>
+      <td>
+        <form method="post" action="{{ url_for('delete_report', report_id=report.id) }}">
+          <button type="submit" onclick="return confirm('정말 삭제할까요?')">삭제</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
